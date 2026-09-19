@@ -28,13 +28,13 @@ public class SecurityConfig {
     @Autowired
     private UserDetailService userDetailService;
 
-    @Value("${spring.bcrypt.strength}")
-    private int strength;
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailService);
-        daoAuthenticationProvider.setPasswordEncoder(getBCryptPasswordEncoder());
+        daoAuthenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
         return daoAuthenticationProvider;
     }
 
@@ -51,11 +51,6 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder getBCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder(strength);
     }
 
     @Bean

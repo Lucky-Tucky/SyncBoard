@@ -15,9 +15,11 @@ public class CustomUserDetail implements UserDetails {
     
     private final String userName;
     private final Collection<? extends GrantedAuthority> authorities;
+    private final String password;
 
     public CustomUserDetail(User user){
         this.userName = user.getId().toString();
+        this.password = user.getPassword();
         this.authorities = List.of(
                 new SimpleGrantedAuthority("ROLE_"+user.getRole())
         );
@@ -29,7 +31,7 @@ public class CustomUserDetail implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return this.password;
     }
 
     @Override

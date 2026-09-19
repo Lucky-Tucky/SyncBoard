@@ -5,16 +5,19 @@ import com.backend.SyncBoard.DTO.SignUpDTO;
 import com.backend.SyncBoard.DTO.UserRequestDTO;
 import com.backend.SyncBoard.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    @Value("${spring.samesite}")
+    private String sameSiteConfig;
 
     @Autowired
     private AuthService authService;
@@ -22,12 +25,27 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequestDTO userRequestDTO){
         AuthBodyDTO authBodyDTO = authService.login(userRequestDTO);
-        return new ResponseEntity<>(authBodyDTO, HttpStatus.OK);
+        ResponseCookie responseCookie = ResponseCookie.from("refresh-token",authBodyDTO.refreshToken())
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .sameSite(sameSiteConfig)
+                .build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.SET_COOKIE,responseCookie.toString());
+        return new ResponseEntity<>(authBodyDTO,headers, HttpStatus.OK);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody SignUpDTO userRequestDTO){
         AuthBodyDTO authBodyDTO = authService.signUp(userRequestDTO);
-        return  new ResponseEntity<>(authBodyDTO,HttpStatus.OK);
+        return new ResponseEntity<>(authBodyDTO,HttpStatus.OK);
+    }
+
+    @GetMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@CookieValue(name = "refresh-token") String token){
+        AuthBodyDTO authBodyDTO = authService.refreshToken(token);
+        return new ResponseEntity<>(authBodyDTO,HttpStatus.OK);
     }
 }

@@ -2,13 +2,11 @@ package com.backend.SyncBoard.Model;
 
 import com.backend.SyncBoard.Enum.Roles;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
+@Getter
 @Builder
 @Data
 @Entity
@@ -34,4 +32,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    private RefreshToken refreshToken;
 }
