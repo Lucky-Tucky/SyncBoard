@@ -36,7 +36,6 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         String token = authorization.split("Bearer ")[1].trim();
-        logger.info("Token-->"+token);
         if(token == null || token.trim().length()<=0){
             filterChain.doFilter(request,response);
             return;
@@ -57,7 +56,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         CustomUserDetail customUserDetail = new CustomUserDetail(user.get());
-        logger.info(customUserDetail.getUsername());
+//        logger.info(customUserDetail.getUsername());
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(customUserDetail,null,customUserDetail.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

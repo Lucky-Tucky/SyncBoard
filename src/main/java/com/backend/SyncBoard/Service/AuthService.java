@@ -1,7 +1,6 @@
 package com.backend.SyncBoard.Service;
 
 import com.backend.SyncBoard.DTO.AuthBodyDTO;
-import com.backend.SyncBoard.DTO.ResponseBodyDTO;
 import com.backend.SyncBoard.DTO.SignUpDTO;
 import com.backend.SyncBoard.DTO.UserRequestDTO;
 import com.backend.SyncBoard.Enum.Roles;

@@ -9,6 +9,6 @@ public record UserRequestDTO(
         String password,
 
         @NotBlank(message = "Email not found")
-        @Size(max = 20, min = 4 , message = "UserName not Valid")
+        @Size(min = 4 , message = "UserName not Valid")
         String email) {
 }
