@@ -1,4 +1,4 @@
-package com.backend.SyncBoard.DTO;
+package com.backend.SyncBoard.DTO.Request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

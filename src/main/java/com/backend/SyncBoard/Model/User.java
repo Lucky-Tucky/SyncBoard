@@ -32,6 +32,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @JoinColumn(name = "userTokenRelation",nullable = true,referencedColumnName = "id")
     private RefreshToken refreshToken;
 }

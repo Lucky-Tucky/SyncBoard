@@ -1,8 +1,8 @@
 package com.backend.SyncBoard.Service;
 
-import com.backend.SyncBoard.DTO.AuthBodyDTO;
-import com.backend.SyncBoard.DTO.SignUpDTO;
-import com.backend.SyncBoard.DTO.UserRequestDTO;
+import com.backend.SyncBoard.DTO.Response.AuthBodyDTO;
+import com.backend.SyncBoard.DTO.Response.SignUpDTO;
+import com.backend.SyncBoard.DTO.Request.UserRequestDTO;
 import com.backend.SyncBoard.Enum.Roles;
 import com.backend.SyncBoard.Model.CustomUserDetail;
 import com.backend.SyncBoard.Model.RefreshToken;
@@ -105,31 +105,29 @@ public class AuthService {
         return new AuthBodyDTO(user.get().getName(),null,jwtToken,200,LocalDateTime.now());
     }
 
-    private String generateAndSaveRefreshToken(UUID user_id){
+    @Transactional
+    private String generateAndSaveRefreshToken(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!"));
 
-        Optional<User> user = userRepository.findById(user_id);
+        String rawToken = authUtils.generateJwtToken(new CustomUserDetail(user), 604800000L);
+        String hashedToken = authUtils.hashToken(rawToken);
 
-        if(user.isEmpty()){
-            throw new UsernameNotFoundException("Not found!");
-        }
+        RefreshToken refreshToken = user.getRefreshToken();
 
-        User get_user = user.get();
-
-        RefreshToken refreshToken = get_user.getRefreshToken();
-        String token = authUtils.generateJwtToken(new CustomUserDetail(get_user),604800000L);
-
-        if(refreshToken==null){
-                refreshToken = RefreshToken.builder()
-                        .token(token)
-                        .user(get_user)
-                        .isRevoked(false)
-                        .build();
-        }else{
-            refreshToken.setToken(authUtils.hashToken(token));
+        if (refreshToken == null) {
+            refreshToken = RefreshToken.builder()
+                    .token(hashedToken)
+                    .user(user)
+                    .isRevoked(false)
+                    .build();
+            user.setRefreshToken(refreshToken);
+        } else {
+            refreshToken.setToken(hashedToken);
             refreshToken.setRevoked(false);
         }
 
         refreshTokenRepository.save(refreshToken);
-        return token;
+        return rawToken;
     }
 }

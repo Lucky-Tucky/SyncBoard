@@ -1,8 +1,8 @@
 package com.backend.SyncBoard.Controller;
 
-import com.backend.SyncBoard.DTO.AuthBodyDTO;
-import com.backend.SyncBoard.DTO.SignUpDTO;
-import com.backend.SyncBoard.DTO.UserRequestDTO;
+import com.backend.SyncBoard.DTO.Response.AuthBodyDTO;
+import com.backend.SyncBoard.DTO.Response.SignUpDTO;
+import com.backend.SyncBoard.DTO.Request.UserRequestDTO;
 import com.backend.SyncBoard.Service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

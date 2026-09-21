@@ -1,7 +1,8 @@
 package com.backend.SyncBoard.Controller;
 
-import com.backend.SyncBoard.DTO.ResponseBodyDTO;
-import com.backend.SyncBoard.DTO.WorkSpaceRequestDTO;
+import com.backend.SyncBoard.DTO.Response.ResponseBodyDTO;
+import com.backend.SyncBoard.DTO.Request.WorkSpaceCreationRequestDTO;
+import com.backend.SyncBoard.DTO.Response.WorkSpaceResponseDTO;
 import com.backend.SyncBoard.Service.WorkSpaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,14 @@ public class WorkSpaceController {
     private WorkSpaceService workSpaceService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> createWorkSpace(@RequestBody WorkSpaceRequestDTO workSpaceRequestDTO){
-        ResponseBodyDTO responseBodyDTO = workSpaceService.createWorkSpace(workSpaceRequestDTO);
+    public ResponseEntity<?> createWorkSpace(@RequestBody WorkSpaceCreationRequestDTO workSpaceCreationRequestDTO){
+        ResponseBodyDTO responseBodyDTO = workSpaceService.createWorkSpace(workSpaceCreationRequestDTO);
         return new ResponseEntity<>(responseBodyDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<?> getWorkSpace(@PathVariable String id){
+        WorkSpaceResponseDTO response = workSpaceService.getWorkSpace(id);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

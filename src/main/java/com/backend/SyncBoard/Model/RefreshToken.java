@@ -23,22 +23,23 @@ public class RefreshToken {
     @Id
     private UUID id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id",nullable = false,referencedColumnName = "userTokenRelation")
+    @OneToOne(mappedBy = "refreshToken", fetch = FetchType.LAZY)
     private User user;
 
     @Column(nullable = false, unique = true, columnDefinition = "TEXT")
     private String token;
-//
-//    @Column(nullable = false)
-//    private LocalDateTime expiryAt;
 
     @LastModifiedDate
     private  LocalDateTime modifiedAt;
 
-    @CreatedDate
+    @Column(nullable = false,updatable = false)
     private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private boolean isRevoked = false;
+
+    @PrePersist
+    protected void createdAt(){
+        this.createdAt = LocalDateTime.now();
+    }
 }

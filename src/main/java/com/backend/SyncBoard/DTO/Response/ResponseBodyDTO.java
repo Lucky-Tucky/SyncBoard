@@ -1,4 +1,4 @@
-package com.backend.SyncBoard.DTO;
+package com.backend.SyncBoard.DTO.Response;
 
 import java.time.LocalDateTime;
 

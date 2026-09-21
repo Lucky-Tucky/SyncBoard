@@ -39,6 +39,11 @@ public class Workspace {
     @JoinColumn(name = "user_workspace_key",nullable = false,referencedColumnName = "id")
     private User user;
 
-    @CreatedDate
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void  onCreate(){
+        this.createdAt = LocalDateTime.now();
+    }
 }
