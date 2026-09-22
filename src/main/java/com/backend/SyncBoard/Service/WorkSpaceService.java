@@ -9,6 +9,8 @@ import com.backend.SyncBoard.Repository.UserRepository;
 import com.backend.SyncBoard.Repository.WorkSpaceRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@CacheConfig(cacheNames = {"workspace"})
 @Service
 public class WorkSpaceService {
 
@@ -53,6 +56,7 @@ public class WorkSpaceService {
 
     }
 
+    @Cacheable(key = "#id")
     public WorkSpaceResponseDTO getWorkSpace(String id){
 
         Authentication securityContext = SecurityContextHolder.getContext().getAuthentication();

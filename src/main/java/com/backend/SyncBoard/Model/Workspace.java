@@ -1,5 +1,6 @@
 package com.backend.SyncBoard.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -35,6 +36,7 @@ public class Workspace {
     @Column(nullable = true)
     private String tags;
 
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "user_workspace_key",nullable = false,referencedColumnName = "id")
     private User user;
