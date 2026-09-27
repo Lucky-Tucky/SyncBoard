@@ -71,7 +71,7 @@ public class AuthService {
         }
         String encode_password = bCryptPasswordEncoder.encode(userRequestDTO.password());
         User new_user = User.builder()
-                .role(Roles.ADMIN)
+                .role(Roles.USER)
                 .name(userRequestDTO.name())
                 .email(userRequestDTO.email())
                 .password(encode_password)

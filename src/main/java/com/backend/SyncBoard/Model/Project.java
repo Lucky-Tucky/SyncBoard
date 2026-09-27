@@ -1,16 +1,15 @@
 package com.backend.SyncBoard.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,7 +21,6 @@ import java.util.UUID;
         }
 )
 public class Project {
-
 
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
@@ -38,9 +36,32 @@ public class Project {
     @JoinColumn(name = "project_workspace_key",nullable = false,referencedColumnName = "id")
     private Workspace workspace;
 
-    @CreatedDate
-    private LocalDateTime createAt;
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime modifiedAt;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "adminUser" , nullable = false, updatable = false, referencedColumnName = "id")
+    private User adminUser;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "project_members",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private java.util.Set<User> members = new java.util.HashSet<>();
+
+    @PrePersist
+    private void setDateTime(){
+        if(this.createdAt==null){
+            this.createdAt = LocalDateTime.now();
+        }else{
+            this.modifiedAt = LocalDateTime.now();
+        }
+    }
+
 }

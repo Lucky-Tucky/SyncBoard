@@ -46,6 +46,7 @@ public class Workspace {
 
     @PrePersist
     protected void  onCreate(){
+        if(this.createdAt!=null) return;
         this.createdAt = LocalDateTime.now();
     }
 }

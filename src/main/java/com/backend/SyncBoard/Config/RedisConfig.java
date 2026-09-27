@@ -19,7 +19,7 @@ public class RedisConfig {
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory){
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-                .prefixCacheNameWith("syncboard-")
+//                .prefixCacheNameWith("syncboard-")
                 .computePrefixWith(cacheName -> "syncboard:" + cacheName + ":")
                 .entryTtl(Duration.ofDays(1))
                 .enableTimeToIdle()

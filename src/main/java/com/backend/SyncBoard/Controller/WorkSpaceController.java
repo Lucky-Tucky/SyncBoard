@@ -29,4 +29,10 @@ public class WorkSpaceController {
         WorkSpaceResponseDTO response = workSpaceService.getWorkSpace(id);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getAllWorkSpace(){
+        ResponseBodyDTO responseBodyDTO = workSpaceService.getAllWorkSpace();
+        return new ResponseEntity<>(responseBodyDTO,HttpStatus.OK);
+    }
 }

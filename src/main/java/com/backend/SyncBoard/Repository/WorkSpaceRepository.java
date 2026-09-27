@@ -8,10 +8,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.*;
 
 @Repository
 public interface WorkSpaceRepository extends JpaRepository<Workspace, UUID> {
 
     @Query("select w from Workspace as w where w.user.id = :userId and w.id = :id")
     public Optional<Workspace> findByIdAndWorkSpaceId(@Param("id") UUID id , @Param("userId") UUID userId);
+
+    @Query("select w from Workspace as w where w.user.id=:userId")
+    public List<Workspace> findAllWorkSpace(@Param("userId") UUID userId);
 }

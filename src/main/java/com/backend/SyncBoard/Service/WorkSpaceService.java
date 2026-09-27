@@ -86,4 +86,18 @@ public class WorkSpaceService {
                 .tags(tags)
                 .build();
     }
+
+    public ResponseBodyDTO getAllWorkSpace(){
+        UUID userId = getUserId();
+        List<Workspace> workspaces = workSpaceRepository.findAllWorkSpace(userId);
+        return new ResponseBodyDTO(workspaces,200,LocalDateTime.now());
+    }
+
+    private UUID getUserId(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.isAuthenticated()){
+            throw new UsernameNotFoundException("Not Found");
+        }
+        return UUID.fromString(authentication.getName());
+    }
 }
