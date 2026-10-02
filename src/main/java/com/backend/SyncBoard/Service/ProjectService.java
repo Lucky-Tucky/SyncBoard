@@ -147,12 +147,12 @@ public class ProjectService {
                             <p>If you did not expect this invitation, you can safely ignore this email.</p>
                         </div>
                         <div class="footer">
-                            <p>&copy; 2024 SyncBoard. All rights reserved.</p>
+                            <p>&copy; %s SyncBoard. All rights reserved.</p>
                         </div>
                     </div>
                 </body>
                 </html>
-                """, user.get().getName(), project.get().getName(), url+"/project/invite-redirect?token="+invitation.getToken());
+                """, user.get().getName(), project.get().getName(), url+"/project/invite-redirect?token="+invitation.getToken(),LocalDateTime.now().getYear());
         Map<String,String> email = new HashMap<>();
 
         email.put("email",invitationRequest.email());
@@ -162,6 +162,9 @@ public class ProjectService {
         return invitation;
     }
 
+    public ResponseBodyDTO inviteUser(String token){
+
+    }
     private UUID getUserId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.isAuthenticated()){

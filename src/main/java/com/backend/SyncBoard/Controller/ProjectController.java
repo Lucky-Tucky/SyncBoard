@@ -6,6 +6,7 @@ import com.backend.SyncBoard.DTO.Response.ResponseBodyDTO;
 import com.backend.SyncBoard.Model.Invitation;
 import com.backend.SyncBoard.Service.ProjectService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,11 @@ public class ProjectController {
     public ResponseEntity<?> inviteUser(@RequestBody @Valid InvitationRequest invitationRequest){
         Invitation invitation = projectService.projectInvitation(invitationRequest);
         return new ResponseEntity<>(new ResponseBodyDTO(invitation,200, LocalDateTime.now()), HttpStatus.OK);
+    }
+
+    @GetMapping("/invite-redirect")
+    public ResponseEntity<?> inviteRedirect(@RequestParam(name = "token") @NotNull String token){
+
     }
 
 }
