@@ -19,7 +19,7 @@ import java.util.UUID;
 @Entity
 public class Invitation {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
@@ -29,6 +29,7 @@ public class Invitation {
     @ManyToOne
     private Project project;
 
+    @JsonIgnore
     @ManyToOne
     private User invitedBy;
 

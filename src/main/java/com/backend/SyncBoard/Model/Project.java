@@ -3,6 +3,8 @@ package com.backend.SyncBoard.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -36,9 +38,11 @@ public class Project {
     @JoinColumn(name = "project_workspace_key",nullable = false,referencedColumnName = "id")
     private Workspace workspace;
 
+    @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @UpdateTimestamp
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
@@ -55,13 +59,13 @@ public class Project {
     )
     private java.util.Set<User> members = new java.util.HashSet<>();
 
-    @PrePersist
-    private void setDateTime(){
-        if(this.createdAt==null){
-            this.createdAt = LocalDateTime.now();
-        }else{
-            this.modifiedAt = LocalDateTime.now();
-        }
-    }
+//    @PrePersist
+//    private void setDateTime(){
+//        if(this.createdAt==null){
+//            this.createdAt = LocalDateTime.now();
+//        }else{
+//            this.modifiedAt = LocalDateTime.now();
+//        }
+//    }
 
 }
