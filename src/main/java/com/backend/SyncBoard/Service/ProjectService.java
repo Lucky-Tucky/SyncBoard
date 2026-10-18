@@ -12,11 +12,15 @@ import com.backend.SyncBoard.Repository.InvitationRepository;
 import com.backend.SyncBoard.Repository.ProjectRepository;
 import com.backend.SyncBoard.Repository.UserRepository;
 import com.backend.SyncBoard.Repository.WorkSpaceRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,11 +28,9 @@ import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
+@Slf4j
 @CacheConfig(cacheNames = {"project"})
 @Service
 public class ProjectService {
@@ -81,7 +83,7 @@ public class ProjectService {
                 .name(projectDTO.name())
                 .key(projectDTO.key())
                 .build();
-
+        project.getMembers().add(user.get());
         projectRepository.save(project);
 
         return new ResponseBodyDTO(project,200, LocalDateTime.now());
@@ -162,9 +164,28 @@ public class ProjectService {
         return invitation;
     }
 
-    public ResponseBodyDTO inviteUser(String token){
+    public ResponseBodyDTO getAll(int pageIndex , int pageSize , String column , String order){
+        UUID userId = getUserId();
+        Sort sort = null;
+        if(!order.isEmpty() && !column.isEmpty()){
+            if(order.trim().equalsIgnoreCase("desc")){
+                sort = Sort.by(column).descending();
+            }else{
+                sort = Sort.by(column).ascending();
+            }
+        }
 
+        assert sort != null;
+        Pageable pageable = (Pageable) PageRequest.of(pageIndex,pageSize,sort);
+
+        List<Project> optionalProject = projectRepository.findAllProject(userId,pageable);
+        log.info(optionalProject.toString());
+        return new ResponseBodyDTO(optionalProject,200,LocalDateTime.now());
     }
+
+//    public ResponseBodyDTO inviteUser(String token){
+//
+//    }
     private UUID getUserId(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(!authentication.isAuthenticated()){

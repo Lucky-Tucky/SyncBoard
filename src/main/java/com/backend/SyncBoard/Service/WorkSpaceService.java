@@ -8,14 +8,18 @@ import com.backend.SyncBoard.Model.Workspace;
 import com.backend.SyncBoard.Repository.UserRepository;
 import com.backend.SyncBoard.Repository.WorkSpaceRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Pageable; // Correct
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -87,9 +91,21 @@ public class WorkSpaceService {
                 .build();
     }
 
-    public ResponseBodyDTO getAllWorkSpace(){
+    public ResponseBodyDTO getAllWorkSpace(int pageSize, int pageIndex , String column , String order){
+        Sort sort = null;
+        if(!order.isEmpty() && !column.isEmpty()){
+            if(order.trim().equalsIgnoreCase("desc")){
+                sort = Sort.by(column).descending();
+            }else{
+                sort = Sort.by(column).ascending();
+            }
+        }
+
+        assert sort != null;
+        Pageable pageable = (Pageable) PageRequest.of(pageIndex,pageSize,sort);
+
         UUID userId = getUserId();
-        List<Workspace> workspaces = workSpaceRepository.findAllWorkSpace(userId);
+        List<Workspace> workspaces = workSpaceRepository.findAllWorkSpace(userId,pageable);
         return new ResponseBodyDTO(workspaces,200,LocalDateTime.now());
     }
 

@@ -9,6 +9,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -47,17 +49,19 @@ public class Project {
     private LocalDateTime modifiedAt;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "adminUser" , nullable = false, updatable = false, referencedColumnName = "id")
     private User adminUser;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "project_members",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private java.util.Set<User> members = new java.util.HashSet<>();
+    @Builder.Default
+    private Set<User> members = new HashSet<>();
 
 //    @PrePersist
 //    private void setDateTime(){

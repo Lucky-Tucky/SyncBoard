@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.*;
@@ -17,5 +18,5 @@ public interface WorkSpaceRepository extends JpaRepository<Workspace, UUID> {
     public Optional<Workspace> findByIdAndWorkSpaceId(@Param("id") UUID id , @Param("userId") UUID userId);
 
     @Query("select w from Workspace as w where w.user.id=:userId")
-    public List<Workspace> findAllWorkSpace(@Param("userId") UUID userId);
+    public List<Workspace> findAllWorkSpace(@Param("userId") UUID userId, Pageable pageable);
 }

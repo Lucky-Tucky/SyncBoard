@@ -31,8 +31,11 @@ public class WorkSpaceController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<?> getAllWorkSpace(){
-        ResponseBodyDTO responseBodyDTO = workSpaceService.getAllWorkSpace();
+    public ResponseEntity<?> getAllWorkSpace(@RequestParam(defaultValue = "10") int pageSize ,
+                                             @RequestParam(defaultValue = "0") int pageIndex,
+                                             @RequestParam(defaultValue = "createdAt") String column,
+                                             @RequestParam(defaultValue =  "asc") String order){
+        ResponseBodyDTO responseBodyDTO = workSpaceService.getAllWorkSpace( pageSize ,  pageIndex ,  column ,  order);
         return new ResponseEntity<>(responseBodyDTO,HttpStatus.OK);
     }
 }

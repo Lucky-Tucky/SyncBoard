@@ -33,9 +33,19 @@ public class ProjectController {
         return new ResponseEntity<>(new ResponseBodyDTO(invitation,200, LocalDateTime.now()), HttpStatus.OK);
     }
 
-    @GetMapping("/invite-redirect")
-    public ResponseEntity<?> inviteRedirect(@RequestParam(name = "token") @NotNull String token){
+    @GetMapping("/get")
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int pageIndex,
+                                    @RequestParam(defaultValue = "10") int pageSize,
+                                    @RequestParam(defaultValue = "createdAt") String column,
+                                    @RequestParam(defaultValue = "asc") String order){
 
+        ResponseBodyDTO responseBodyDTO = projectService.getAll(pageIndex, pageSize, column, order);
+        return new ResponseEntity<>(responseBodyDTO,HttpStatus.OK);
     }
+
+//    @GetMapping("/invite-redirect")
+//    public ResponseEntity<?> inviteRedirect(@RequestParam(name = "token") @NotNull String token){
+//
+//    }
 
 }
